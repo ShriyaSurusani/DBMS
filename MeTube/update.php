@@ -66,7 +66,8 @@ if(isset($_POST['submit'])) {
 						$update_error = "New passwords do not match.";
 					}
 					else {
-						$query = "UPDATE users SET email='$email', password='$new_password' WHERE username='$_susername'";
+						$query = "UPDATE users SET email='".$email."', password='".$new_password."' WHERE username='".$_susername."'";
+						echo $query;
 						$result = mysqli_query($con, $query);
 
 						if($result){
@@ -97,8 +98,7 @@ if(isset($_POST['submit'])) {
 		}
 	}
 }
-  if(isset($update_error))
-   {  echo "<div><h2>".$update_error."</h2></div>";}
+
 
 
 if(isset($_POST['delete_contact'])) {
@@ -169,11 +169,13 @@ if(isset($_POST['delete_contact'])) {
     <label for="exampleInputPassword1" class="form-label"> Confirm New Password</label>
     <input type="password" class="form-control"  name="confirm_new_password" maxlength="15">
   </div>
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary "style = "margin-left:43%">Submit</button>
+  <input name  ='submit' type="submit" class="btn btn-primary "style = "margin-left:43%" value = 'Update'>
+  <?php if(isset($update_error))
+   { echo "<div class = 'text text-danger'>".$update_error."</div>";}?>
+   <?php if(isset($smsg))
+   { echo "<div class = 'text text-success'>".$smsg."</div>";}?>
+   <?php if(isset($fmsg))
+   { echo "<div class = 'text text-danger'>".$fmsg."</div>";}?>
 </form>
   </div>
 
@@ -196,13 +198,13 @@ if(isset($_POST['delete_contact'])) {
 		}
 		else {
 	?>
-		<table class = "table" style=";color:white;">
+		<table class = "table" style="color:white;">
 			<thead>
 			<tr>
 				<th scope="col" style = "padding-left:4%">Username</th>
 				<th scope="col">Email</th>
 				<th scope="col">Relation</th>
-				<th scope="col">Message</th>
+				<th scope="col" style = 'border-right:solid'>Message</th>
 			</tr>
 		</thead>
 		<?php
@@ -219,7 +221,7 @@ if(isset($_POST['delete_contact'])) {
 				<td><?php echo $row[0] ?></td>
 				<td><?php echo $row[1] ?></td>
 				<td><?php echo $row[2] ?></td>
-				<td><a href="message.php?id=<?php echo $convid;?>" target="_blank">Message</a></td>
+				<td  '><a href="message.php?id=<?php echo $convid;?>" target="_blank">Message</a></td>
 				<?php
 			if (! empty($_SESSION['logged_in']))
 			{ 
@@ -235,20 +237,20 @@ if(isset($_POST['delete_contact'])) {
 				$favs = mysqli_query($con, $query );
 				$favs_row = mysqli_fetch_row($favs);
 				if($favs_row[0] == 0){ ?>
-					<td><form action="update.php" method="post">
+					<td style = 'border-top: solid black'><form action="update.php" method="post">
 						<input type="hidden" name="block" value="<?php echo $contact_id;?>">
-						<input type="submit" value="Block">
+						<input class = 'btn btn-danger' type="submit" value="Block">
 					</form><br></td>
 				<?php } 
 				else { ?>
-					<td><form action="update.php" method="post">
+					<td style = 'border-top: solid black'><form action="update.php" method="post">
 						<input type="hidden" name="unblock" value="<?php echo $contact_id;?>">
-						<input type="submit" value="Unblock">
+						<input class = 'btn btn-warning' type="submit" value="Unblock">
 					</form><br></td>
 			<?php } }?>
-				<td><form action="update.php" method="post">
+				<td style = 'border-top: solid black'><form action="update.php" method="post">
 						<input type="hidden" name="delete_contact" value="<?php echo $row[0]; ?>">
-						<input type="submit" value="Delete">
+						<input class = 'btn btn-danger' type="submit" value="Delete">
 					</form></td>
 			</tr>
 		<?php } ?>
@@ -294,12 +296,12 @@ if(isset($_POST['delete_contact'])) {
 		$result = mysqli_query($con, $query);?>
 			<div class="my_contacts">
 				<?php echo "<h3 style = 'padding-left:3%; margin-top:3%;'>Friends</h3>";?>
-				<table  class = "table" style=";color:white;">
+				<table  class = "table" style="color:white;">
 				<thead>
 			<tr>
 				<th scope="col" style = "padding-left:4%">Username</th>
 				<th scope="col" >Email</th>
-				<th scope="col" >Message</th>
+				<th scope="col" style = 'border-right:solid' >Message</th>
 			</tr>
 </thead>
 		<?php
@@ -316,9 +318,9 @@ if(isset($_POST['delete_contact'])) {
 				<td><?php echo $row[0] ?></td>
 				<td><?php echo $row[1] ?></td>
 				<td><a href="message.php?id=<?php echo $convid;?>" target="_blank">Message</a></td>
-			<td><form action="update.php" method="post">
+			<td style = 'border-top:solid black'> <form action="update.php" method="post">
 						<input type="hidden" name="delete_contact" value="<?php echo $row[0]; ?>">
-						<input type="submit" value="Delete">
+						<input class = 'btn btn-danger' type="submit" value="Delete">
 					</form></td>
 			</tr>
 		<?php }?>
@@ -426,15 +428,14 @@ if(isset($_POST['delete_contact'])) {
 			<th>Action </th>
 		</tr>
 </thead>
-		<tr>
-			<td>
+		
 			<?php
 			$query = "SELECT groupname FROM groups";
-				$res = mysqli_query($con, $query );
-				$res_row = mysqli_fetch_row($res);
-			?>
-			<?php
-			$query = "SELECT username FROM group_user WHERE groupname='$res_row[0]' AND username='$_susername'";
+				$result = mysqli_query($con, $query );
+				
+				while ($res_row = mysqli_fetch_row($result)) {
+					
+			$query = "SELECT username FROM group_user WHERE groupname='".$res_row[0]."' AND username='".$_susername."'";
 				$res = mysqli_query($con, $query );
 				$row = mysqli_fetch_row($res);
 				if($row[0]==$_susername){ 
@@ -443,18 +444,20 @@ if(isset($_POST['delete_contact'])) {
 				else{
 					$href="update.php";
 				}?>
+			<tr>
+					<td>
 			<a href="<?php echo $href;?>" target="_blank"><?php echo $res_row[0];?></a>
 			</td>
 			<?php
 			
-			$query = "SELECT username FROM group_user WHERE groupname='$res_row[0]' AND username='$_susername'";
+			$query = "SELECT username FROM group_user WHERE groupname='".$res_row[0]."' AND username='".$_susername."'";
 				$favs = mysqli_query($con, $query );
 				$favs_row = mysqli_fetch_row($favs);
 				$username=$_susername;
 				if($favs_row[0]==$username){ ?>
 					<td><form action="update.php" method="post">
 						<input  type="hidden" name="leave" value="<?php echo $res_row[0];?>">
-						<input type="submit" value="leave">
+						<input class = "btn btn-warning" type="submit" value="leave">
 					</form><br></td>
 				<?php } 
 				else { ?>
@@ -464,8 +467,9 @@ if(isset($_POST['delete_contact'])) {
 					</form><br></td>
 			<?php }   ?>
 		</tr>
-		
+		<?php }   ?>
 	</table>
+	
 	<?php
     	echo " <a class = 'btn btn-primary' href='add_group.php' style = 'margin-left:1%'>+ Add Group</a>";
 		 

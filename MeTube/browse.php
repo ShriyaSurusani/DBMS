@@ -44,22 +44,7 @@ function saveDownload(id)
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
 
-      <div class="dropdown">
-  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-  <a class="nav-link" href="wordcloud.php"> Word Cloud<span class="sr-only">(current)</span></a>
-
-	<?php 
-	$username=$_SESSION['username'];
-	$query = "SELECT createdby from subscribe where username='$username'";
-		$result = mysqli_query($con, $query);
-		while ($row = mysqli_fetch_row($result)){ ?>
-		<a class="dropdown-item" href="<?php echo "subscriptions.php?id=".$row[0];?>"><?php echo $row[0];?></a>
-		<?php }?>
-  </div>
-</div>
+      
 <form class="form-inline" action="browseFilter.php" method="post" style ="width:50rem; margin-left:20%">
     <input class="form-control mr-sm-2" type="search" name="searchwords" placeholder="" aria-label="Search" style ="margin-left:25%; width:50%;">
     <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -67,22 +52,7 @@ function saveDownload(id)
 </svg></button>
   </form>
   </div>
-  <div class="dropdown">
-  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-  <a class="nav-link" href="wordcloud.php"> Word Cloud<span class="sr-only">(current)</span></a>
-
-	<?php 
-	$username=$_SESSION['username'];
-	$query = "SELECT createdby from subscribe where username='$username'";
-		$result = mysqli_query($con, $query);
-		while ($row = mysqli_fetch_row($result)){ ?>
-		<a class="dropdown-item" href="<?php echo "subscriptions.php?id=".$row[0];?>"><?php echo $row[0];?></a>
-		<?php }?>
-  </div>
-</div>
+  
   
 <?php
 	if (! empty($_SESSION['logged_in']))
@@ -128,12 +98,14 @@ function saveDownload(id)
 </svg>
 		</button></a></div>";
 ?>
-<div class="dropdown">
-  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    
+<div class = 'col-2'>
+<a class="btn btn-primary" href="wordcloud.php"> Word Cloud<span class="sr-only">(current)</span></a></div>
+<div class="dropdown col-2">
+  <button class="btn dropdown-toggle btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Subscriptions
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-  <a class="nav-link" href="wordcloud.php"> Word Cloud<span class="sr-only">(current)</span></a>
+  
 
 	<?php 
 	$username=$_SESSION['username'];
@@ -148,7 +120,9 @@ function saveDownload(id)
 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   + Create New Playlist
 </button></div>
-<a class="dropdown-item" href="<?php echo "subscriptions.php?id=".$row[0];?>"><?php echo $row[0];?></a>
+<div class ='col-3'>
+<a class = 'btn btn-primary'href="manage_playlists.php?user=<?php echo $username;?>" target="_blank">Manage Playlists</a>
+		</a></div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -181,17 +155,9 @@ function saveDownload(id)
   </div>
 </div>
 		
-<?php 
-	$username=$_SESSION['username'];
-	$query = "SELECT createdby from subscribe where username='$username'";
-		$result = mysqli_query($con, $query);
-		while ($row = mysqli_fetch_row($result)){ ?>
-		<a class="dropdown-item" href="<?php echo "subscriptions.php?id=".$row[0];?>"><?php echo $row[0];?></a>
-		<?php }?>
 
-	<br/><br/>
 	<!-- Button trigger modal -->
-<div class = 'col-3'>
+<div class = 'col-3' style = 'margin-top:2%'>
 <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter"> Add Channel
 </button></div>
 	</div>
@@ -260,7 +226,8 @@ function saveDownload(id)
 		
 		<?php }
 		else {
-			
+			echo '<div style = "margin-top:3%">
+<a class="btn btn-primary" href="wordcloud.php"> Word Cloud<span class="sr-only">(current)</span></a></div>';
 		}
 		?>
 <?php
@@ -443,7 +410,7 @@ function saveDownload(id)
 		  		</select>
 		</td>
 
-		<td><button class = "btn btn-primary" type="submit" > Apply Filters <i class="fa fa-filter" aria-hidden="true"></i></button></td>
+		<td><button class = "btn btn-primary" type="submit" value ='submit'> Apply Filters <i class="fa fa-filter" aria-hidden="true"></i></button></td>
 		</form>
 	</tr>
 	</table>

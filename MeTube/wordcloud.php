@@ -8,8 +8,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Word Cloud</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="stylesheet" type="text/css" href="default.css" />
@@ -30,32 +30,14 @@ function saveDownload(id)
 </script>
 </head>
 
-<body>
+<body style="background-image:url(img/bg.png) !important; color:white !important; ">
+	<nav class="navbar navbar-expand-lg bg-danger">
+		<a class="navbar-brand" href="browse.php"><img src="img/metube.png" width="80" height="40" alt="logo"></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+  </nav>
 
-<div class="topnav">
-<a class="active logo" href="browse.php"><img src="img/metube.png" width="85" height="40" alt="logo"></a>
-	<table align="right">
-	<form action="browseFilter.php" method="post">
-		<td><input type="text" placeholder="Search.." name="searchwords"></td>
-		<td><input type="submit" value="Search" name="search"></td>
-</form>
-</table>
-  <?php
-	if (! empty($_SESSION['logged_in']))
-	{
-		$username = $_SESSION['username'];
-  		echo "<a href='logout.php'>Logout</a>
-  		<a href='update.php'>Profile</a>";
-	}
-	else {
-		echo"<a href='index.php'>Login</a>";
-		echo"<a href='registration.php'>Register</a>";
-	}
-
-  ?>
-</div>
-
-<h1>Word Cloud</h1>
 <br/><br/>
 
 <div class="content">
@@ -75,7 +57,7 @@ function saveDownload(id)
       <?php
       $query = "SELECT * from keywords";
 		$result = mysqli_query($con, $query);
-      $total = 0;
+      $total = 1;
       while ($keyword = mysqli_fetch_array($result, MYSQLI_NUM)) {
         $word = $keyword[1];
         $count = $keyword[2];
@@ -83,6 +65,7 @@ function saveDownload(id)
         $total += $count;
       }
       ?>
+      console.log(values)
       var width = document.querySelector('.content').offsetWidth;
       var layout = d3.layout.cloud()
         .size([800, 800])
@@ -107,6 +90,7 @@ function saveDownload(id)
         d3.select("svg")
           .attr("width", layout.size()[0])
           .attr("height", layout.size()[1])
+          .attr("style"," margin-left:20%;border:solid;")
           .append("g")
           .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
           .selectAll("text")

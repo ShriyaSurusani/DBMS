@@ -86,7 +86,7 @@ include_once "function.php";
 
 	<?php
 	if (isset($_GET['id'])) {
-		$query = "SELECT * FROM media WHERE mediaid='" . $_GET['id'] . "'";
+		$query = "SELECT * FROM media WHERE mediaid=". $_GET['id'] ."";
 		$result = mysqli_query($con, $query);
 		$result_row = mysqli_fetch_row($result);
 
@@ -246,6 +246,7 @@ include_once "function.php";
                 <input type='hidden' name='mediarate' value='" . $_GET['id'] . "'>
                 <input class ='btn btn-warning' type='submit' value='Rate' name='submitrate'></td>
                     </form><br></div>";
+					else echo "<div class = 'row'><div class ='col-3'></div></div>";
 
 						$mediapath = 'media.php?id=' . $_GET["id"];
 						$mediaid = $_GET["id"];
@@ -254,21 +255,27 @@ include_once "function.php";
 						$favs = mysqli_query($con, $query);
 						$favs_row = mysqli_fetch_row($favs);
 						if ($favs_row[0] == 0) {
-							echo "<div class ='col-3'><form action= " . $mediapath . "method='post'>
-							<input type='hidden' name='favorite' value=" . $mediaid . ">
+							if ($username != NULL)
+							echo "<div class ='col-3'><form action= ". $mediapath ." method='post'>
+							<input type='hidden' name='favorite' value=". $mediaid .">
 							<button class = 'btn btn-success' type = 'submit' value = 'Favorite'>
 							<i class='fa fa-thumbs-up'aria-hidden='true' ></i>
 							Favorite
 							</button>
 							
 						</form><br></div>";
+						else
+						echo "<div class ='col-3'></div>";
 						} else {
-							echo '<div class ="col-6"><form action=' . $mediapath . ' method="post">
-							<input type="hidden" name="unfavorite" value="' . $mediaid . '">
-							<input type="submit" value="Unfavorite">
-						</form><br></div></div>';
+							echo '<div class ="col-3"><form action=' . $mediapath . ' method="post">
+							<input type="hidden" name="unfavorite" value=' . $mediaid . '>
+							<button type="submit" button class = "btn btn-warning" value="Unfavorite">
+							<i class="fa fa-thumbs-down"aria-hidden="true" ></i>
+							Unfavorite
+							</button>
+						</form><br></div>';
 						}
-						echo $mediaid;
+						
 						echo "<div class ='col-2'><a class ='btn btn-primary' href='media_download_process.php?id=".$mediaid." target='_blank' onclick='javascript:saveDownload(" . $result_row[0] . "'><i class='fa fa-download' aria-hidden='true'></i>
 					Download</a></div>";
 
@@ -279,6 +286,7 @@ include_once "function.php";
 						?>
 
 						<?php
+						if($username != NULL){
 						$query = "SELECT * FROM user_playlists where username='$username'";
 						$addToPlaylist_result = mysqli_query($con, $query); ?>
 						<div class='col-4'>
@@ -292,6 +300,7 @@ include_once "function.php";
 								<input class='btn btn-primary' type="submit" value="+ Add to Playlist">
 							</form>
 						</div>
+						<?php } else echo "<div class='col-4'></div></div>";?>
 				</div>
 
 
@@ -354,28 +363,33 @@ include_once "function.php";
 				$query = "SELECT COUNT(*) FROM subscribe WHERE subscribed='yes' AND username='$username' and createdby='$user'";
 				$favs = mysqli_query($con, $query);
 				$favs_row = mysqli_fetch_row($favs);
-				if ($favs_row[0] == 0) { ?>
+				if ($favs_row[0] == 0) { if($username!=NULL) {?>
+					
 					<div class='col-6' style = 'padding-right:5%;text-align:right;'>
 						<form action=<?php echo $mediapath ?> method="post">
 							<input type="hidden" name="subscribe" value="<?php echo $user; ?>">
 							<input class='btn btn-danger' type="submit" value="Subscribe">
 						</form><br>
 					</div>
-				<?php } else { ?>
-					<div>
+				<?php } } else { ?>
+					<div class='col-6' style = 'padding-right:5%;text-align:right;'>
 						<form action=<?php echo $mediapath ?> method="post">
 							<input type="hidden" name="unsubscribe" value="<?php echo $user; ?>">
-							<input type="submit" value="Unsubscribe">
+							<input  class='btn btn-danger' type="submit" value="Unsubscribe">
 						</form><br>
 					</div>
 				<?php } ?>
 			</div>
+
+			<?php if($username==NULL) echo "<div style = 'width:50%'>"?>
 			<p style='margin-left:5%'> <em> Description:</em></p>
 			<p style='margin-left:11%'> <?php echo $result_row[5] ?></p>
-			<?php $query = "SELECT views from media where mediaid='$result_row[0]'";
+			<?php if($username==NULL) echo "</div> "?>
+			<?php $query = "SELECT views from media where mediaid=".$result_row[0]."";
 			$view_result = mysqli_query($con, $query);
 			$view = mysqli_fetch_row($view_result); ?>
-			<?php $query = "update media set views='$view[0]' where mediaid='$result_row[0]'";
+			<?php $d = intval($view[0])+1; $query = "update media set views=".$d." where mediaid=".$result_row[0]."";
+			
 			$view_result = mysqli_query($con, $query); ?>
 
 		</div>
@@ -413,7 +427,7 @@ include_once "function.php";
 								<td>
 									<form action=<?php echo $mediapath ?> method="post">
 										<input type="hidden" name="delete_comment" value="<?php echo $row[4]; ?>">
-										<input type="submit" value="Delete">
+										<input class = 'btn btn-danger' type="submit" value="Delete">
 									</form>
 								</td>
 						<?php }
@@ -480,17 +494,17 @@ include_once "function.php";
 								$type = $result_row[3];
 								if (substr($type, 0, 5) == "image") //view image
 								{
-									echo "<img class = 'col-6' style = 'margin-top:5%' src='" . $filepath . $filename . "' height=200 width=300/> <br/>";
+									echo "<img class = 'col-6' style = 'margin-top:5%;;border:solid' src='" . $filepath . $filename . "' height=200 width=300/> <br/>";
 								} else //view movie
 								{
 								?>
 									<div style="width:50%">
-										<video style="margin-top:13%" width="290" height="240" controls> <br />
+										<video style="margin-top:13%;border:solid" width="290" height="240" controls> <br />
 											<source src="<?php echo $result_row[2] . $result_row[1];  ?>" type="video/mp4">
 										</video>
 									</div>
 								<?php } ?>
-								<div style="margin-top:7%; margin-right:19%">
+								<div style="margin-top:7%; margin-left:19%">
 									<h4 style="margin-top:30%;"><a href="media.php?id=<?php echo $result_row[0]; ?>" target="_blank"><?php echo $result_row[4]; ?></a></h4>
 
 									<div style="width:5rem; margin-top:40%;  color:orange">

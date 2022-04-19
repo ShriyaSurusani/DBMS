@@ -109,11 +109,12 @@ function saveDownload(id)
 <h5>Search Results:</h5>
 <?php
 $srch = $_POST['searchwords'];
+
 	$query = "SELECT count from keywords where keyword='$srch'";
 		$result = mysqli_query($con, $query);
 		$row = mysqli_fetch_row($result);
 		$count=$row[0]+1;
-		$query = "update keywords set count='$count' where keyword='$srch'";
+		$query = "update keywords set count=".$count." where keyword='".$srch."'";
 		$result = mysqli_query($con, $query);
 	if(isset($_POST['type'])) {
 	$type = $_POST['type'];
